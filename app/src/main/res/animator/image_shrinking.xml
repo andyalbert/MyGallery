@@ -1,5 +1,5 @@
 <set android:ordering="together" xmlns:android="http://schemas.android.com/apk/res/android">
-    <objectAnimator android:propertyName="alpha" android:duration="200" android:repeatCount="0" android:valueTo="0.6f" android:valueType="floatType"/>
-    <objectAnimator android:propertyName="scaleX" android:duration="200" android:repeatCount="0" android:valueType="floatType" android:valueTo="0.8f" />
-    <objectAnimator android:propertyName="scaleY" android:duration="200" android:repeatCount="0" android:valueTo="0.8f" android:valueType="floatType"/>
+ <!--   <objectAnimator android:propertyName="alpha" android:duration="200" android:repeatCount="0" android:valueTo="0.6f" android:valueType="floatType"/> -->
+    <objectAnimator android:propertyName="scaleX" android:duration="300" android:repeatCount="0" android:valueType="floatType" android:valueTo="0.8f" />
+    <objectAnimator android:propertyName="scaleY" android:duration="300" android:repeatCount="0" android:valueTo="0.8f" android:valueType="floatType"/>
 </set>

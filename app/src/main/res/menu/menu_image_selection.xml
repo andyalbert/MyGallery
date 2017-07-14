@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/item_delete"
+        app:showAsAction="always"
+        android:title="delete"
+        android:icon="@drawable/ic_delete"
+        />
+    <item android:id="@+id/item_share"
+        app:showAsAction="ifRoom"
+        android:title="share"
+        android:icon="@drawable/ic_share"
+        />
+    <item android:id="@+id/item_create_album"
+        app:showAsAction="ifRoom"
+        android:title="create album"
+        android:icon="@drawable/ic_create_album"
+        />
+    <item android:id="@+id/item_favorite"
+        app:showAsAction="ifRoom"
+        android:title="add to favorite"
+        android:icon="@drawable/ic_favorite"
+        />
+</menu>

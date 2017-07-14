@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -15,5 +15,17 @@
         android:horizontalSpacing="5dp"
         android:verticalSpacing="5dp"
         tools:listitem="@layout/list_item_all_images"
+        android:scrollbarThumbVertical="?colorPrimary"
+        android:scrollbarSize="4dp"
+        android:fadeScrollbars="false"
+        android:animateLayoutChanges="true"
         />
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_no_images"
+        android:visibility="gone"
+        android:id="@+id/fragment_all_images_no_image"
+        />
+</FrameLayout>
