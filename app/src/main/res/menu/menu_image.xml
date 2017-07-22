@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/item_info"
+         app:showAsAction="always"
+        android:icon="@drawable/ic_info"
+        android:title="show info"
+        />
+    <item android:id="@+id/item_delete"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delete"
+        android:title="delete"/>
+    <item android:id="@+id/item_share"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_share"
+        android:title="share"
+        />
+    <item android:id="@+id/item_set_as_wallpaper"
+        app:showAsAction="never"
+        android:title="set as wallpaper"
+        />
+
+</menu>

@@ -39,12 +39,15 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.project.mygallary.R;
+import com.project.mygallary.activities.ImageViewerActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -60,6 +63,8 @@ import butterknife.ButterKnife;
 public class AllImagesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
     @BindView(R.id.fragment_all_images_gridview)
     GridView gridView;
+    @BindView(R.id.fragment_all_images_progressbar)
+    ProgressBar progressBar;
     private Cursor cursor = null;
     private View view;
     private AllImagesCursorAdapter imagesCursorAdapter;
@@ -118,14 +123,13 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
         }
         imagesCursorAdapter = new AllImagesCursorAdapter(getActivity(), null, 0); // zero in order not to handle changes, it will be done by the loader itself
 
-        if(selectedNumber > 0)
-            gridView.setOnItemClickListener(this);
-        else
+        if(selectedNumber == 0)
             gridView.setOnItemLongClickListener(this);
         gridView.setNumColumns(columnCount);
         gridView.setAdapter(imagesCursorAdapter);
 
         getLoaderManager().initLoader(0, null, this);
+        gridView.setOnItemClickListener(this);
         return view;
     }
 
@@ -141,6 +145,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "onCreateLoader: ");
         String[] projection = {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DATE_TAKEN,
@@ -161,6 +166,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset: ");
     }
 
     /**
@@ -180,7 +186,6 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
         imagesCursorAdapter.notifyDataSetChanged();
 
         gridView.setOnItemLongClickListener(null);
-        gridView.setOnItemClickListener(this);
         Log.d(TAG, "onItemLongClick: ");
 
         initializeToolbarOptions();
@@ -198,6 +203,9 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     /**
+     * it's used to handle both multi-selecting items, or viewing a specific image
+     *
+     * for the multi-selection capability:
      * it's used to handle the clicking of any image after the {@link #onItemLongClick(AdapterView, View, int, long)} is pressed, it either select or de-select items changing the values of
      * @see #selectedNumber and
      * @see #isSelected
@@ -208,7 +216,14 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick: ");
+        if(gridView.getOnItemLongClickListener() != null){
+            Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
+            cursor.moveToPosition(position);
+            intent.putExtra("position", position);
+            startActivity(intent);
+            Log.d(TAG, "onItemClick: test");
+            return;
+        }
         if(!isSelected.get(position)) {
             selectedNumber++;
             justSelected = position;
@@ -221,7 +236,6 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
             justUnselected = position;
             imagesCursorAdapter.notifyDataSetChanged();
             if(selectedNumber == 0){
-                gridView.setOnItemClickListener(null);
                 gridView.setOnItemLongClickListener(this);
                 setHasOptionsMenu(false);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -303,18 +317,20 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
          */
         @Override
         public Cursor swapCursor(Cursor newCursor) {
-            //// TODO: 12/07/17 caution : this is only handling adding new images, NOT DELETING
-            if(isSelected != null && !isSelectedArraySaved){
+            Log.d(TAG, "swapCursor: ");
+            //// TODO: 12/07/17 adding and removing images from external resources should be handled in future releases
+          /*  if(isSelected != null && !isSelectedArraySaved){
                 int diffSize = newCursor.getCount() - isSelected.size();
                 ArrayList<Boolean> tmp = new ArrayList<>(diffSize);
                 tmp.addAll(Collections.nCopies(diffSize, Boolean.FALSE));
                 tmp.addAll(isSelected);
                 isSelected = tmp;
-            } else if(!isSelectedArraySaved){
+            } else */if(!isSelectedArraySaved){
                 isSelected = new ArrayList<>(newCursor.getCount());
                 isSelected.addAll(Collections.nCopies(newCursor.getCount(), Boolean.FALSE));
             }
             isSelectedArraySaved = false;
+            progressBar.setVisibility(View.GONE);
             if (newCursor.getCount() == 0) {
                 ButterKnife.findById(view, R.id.fragment_all_images_no_image).setVisibility(View.VISIBLE);
                 gridView.setVisibility(View.GONE);
@@ -346,7 +362,6 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
         switch (item.getItemId()){
             case android.R.id.home: {
                 gridView.setOnItemLongClickListener(this);
-                gridView.setOnItemClickListener(null);
                 for(int i = 0;i < isSelected.size();i++)
                     isSelected.set(i, Boolean.FALSE);
                 selectedNumber = 0;
@@ -355,7 +370,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                 imagesCursorAdapter.notifyDataSetChanged();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 setHasOptionsMenu(false);
-
+                //// TODO: 22/07/17 handle on back pressed with items selected
                 return true;
             }
             case R.id.item_delete: {
@@ -364,26 +379,34 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                         getActivity().requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                     } else
                         deleteSelectedImages();
+                else
+                    deleteSelectedImages();
                 return true;
             }
             case R.id.item_create_album:
+                //// TODO: 14/07/17 finish
                 break;
             case R.id.item_share:{
                 ArrayList<Uri> uris = new ArrayList<>();
                 for(int i = 0;i < isSelected.size();i++){
                     if(isSelected.get(i)){
+                        //// TODO: 15/07/17 replace with better implementation
                         cursor.moveToPosition(i);
-                        uris.add(Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))));
+                        uris.add(Uri.fromFile(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)))));
                     }
                 }
-                Intent intent = new Intent(Intent.ACTION_SEND);
+                Intent intent;
+                if(isSelected.size() == 1)
+                    intent = new Intent(Intent.ACTION_SEND);
+                else
+                    intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_STREAM, uris);
                 Intent chooser = Intent.createChooser(intent, "share through");
                 startActivity(chooser);
             }
             case R.id.item_favorite:
-
+                //// TODO: 14/07/17 finish
         }
         return false;
     }
@@ -406,6 +429,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                         StringBuilder builder = new StringBuilder("_id in ( ");
                         for(int i = 0; i < isSelected.size();i++)
                             if(isSelected.get(i)){
+                                //// TODO: 15/07/17 replace with better implementation
                                 cursor.moveToPosition(i);
                                 builder.append(cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)) + ", ");
                             }
@@ -418,6 +442,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                         getActivity().getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, builder.toString(), null);
                         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         setHasOptionsMenu(false);
+                        gridView.setOnItemLongClickListener(AllImagesFragment.this);
                         dialogInterface.dismiss();
                     }
                 }).show();

@@ -28,4 +28,11 @@
         android:visibility="gone"
         android:id="@+id/fragment_all_images_no_image"
         />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyle"
+        android:layout_gravity="center"
+        android:id="@+id/fragment_all_images_progressbar"
+        />
 </FrameLayout>

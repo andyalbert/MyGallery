@@ -2,6 +2,7 @@ package com.project.mygallary.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,17 +61,14 @@ public class MainActivity extends AppCompatActivity{
         viewPager.setAdapter(fragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setText("text");
-        tabLayout.getTabAt(1).setText("text2");
-        tabLayout.getTabAt(2).setText("text3");
-        tabLayout.getTabAt(3).setTag("text4");
-
-
+        tabLayout.getTabAt(0).setText("Folders");
+        tabLayout.getTabAt(1).setText("Albums");
+        tabLayout.getTabAt(2).setText("All");
+        tabLayout.getTabAt(3).setText("text4");
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
 //    ButterKnife.findById(this, R.id.content_main_viewpager).setOnTouchListener(new View.OnTouchListener() {
@@ -79,17 +77,8 @@ public class MainActivity extends AppCompatActivity{
 //            return true;
 //        }
 //    });
-//        ButterKnife.findById(this, R.id.content_main_viewpager).setOnTouchListener(null);
-//
-//
-//
-//
-//    ButterKnife.findById(this, R.id.content_main_tablayout).setOnTouchListener(new View.OnTouchListener() {
-//        @Override
-//        public boolean onTouch(View view, MotionEvent motionEvent) {
-//            return true;
-//        }
-//    });
+   //     ButterKnife.findById(this, R.id.content_main_viewpager).setOnTouchListener(null);
+
 
     }
 
