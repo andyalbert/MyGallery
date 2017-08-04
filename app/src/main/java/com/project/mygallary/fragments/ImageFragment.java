@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author andrew
@@ -31,12 +32,13 @@ import butterknife.ButterKnife;
 public class ImageFragment extends Fragment {
     @BindView(R.id.fragment_image_image)
     ImageView imageView;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         String imageUri = getArguments().getString("imageUri");
         Glide.with(getActivity())
                 .load(imageUri)
@@ -49,5 +51,11 @@ public class ImageFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

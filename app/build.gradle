@@ -39,4 +39,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     testCompile 'junit:junit:4.12'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }

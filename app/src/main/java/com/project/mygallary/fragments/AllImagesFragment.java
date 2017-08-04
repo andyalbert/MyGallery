@@ -53,6 +53,7 @@ import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author andrew
@@ -65,6 +66,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
     GridView gridView;
     @BindView(R.id.fragment_all_images_progressbar)
     ProgressBar progressBar;
+    private Unbinder unbinder;
     private Cursor cursor = null;
     private View view;
     private AllImagesCursorAdapter imagesCursorAdapter;
@@ -112,7 +114,7 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_all_images, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         findScreenDisplayMetrics();
 
@@ -152,7 +154,8 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                 MediaStore.Images.Media.TITLE,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.SIZE
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         };
         return new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, MediaStore.Images.Media.DATE_TAKEN + " DESC");
     }
@@ -301,6 +304,8 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
                 imageView.setScaleX(1f);
                 imageView.setScaleY(1f);
             }
+
+            Log.d(TAG, "bindView: " + cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)));
         }
 
         private void showHiddenViews(View selectionBackground, ImageView selectionIdentifier) {
@@ -452,5 +457,11 @@ public class AllImagesFragment extends Fragment implements LoaderManager.LoaderC
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_image_selection, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
