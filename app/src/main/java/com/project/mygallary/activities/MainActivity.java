@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.project.mygallary.R;
 import com.project.mygallary.fragments.AlbumsFragments;
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 //    ButterKnife.findById(this, R.id.content_main_viewpager).setOnTouchListener(new View.OnTouchListener() {
 //        @Override

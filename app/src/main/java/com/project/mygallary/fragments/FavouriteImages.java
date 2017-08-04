@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 
 import com.project.mygallary.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -26,6 +28,7 @@ public class FavouriteImages extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_favourite_images, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 }
