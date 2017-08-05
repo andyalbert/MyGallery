@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.content_main_viewpager)
     ViewPager viewPager;
 
-    private final int WRITE_PERMISSION = 0;
-    private final int READ_PERMISSION = 1;
-
     private final String TAG = MainActivity.class.getCanonicalName();
 
     @Override
@@ -52,10 +49,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_PERMISSION);
-        }
+
 
 
         MainFragmentsPagerAdapter fragmentPagerAdapter = new MainFragmentsPagerAdapter(getSupportFragmentManager());
@@ -82,11 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED))
-            finishAffinity();
-    }
+
 
     private class MainFragmentsPagerAdapter extends FragmentPagerAdapter{
         private final int FRAGMENT_NUMBER = 4;
