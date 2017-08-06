@@ -6,8 +6,10 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -55,6 +57,10 @@ public class AlbumsFragments extends Fragment implements LoaderManager.LoaderCal
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.HORIZONTAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.album_recyclerview_divider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         getLoaderManager().initLoader(0, null, this);
         return view;
 
@@ -96,7 +102,7 @@ public class AlbumsFragments extends Fragment implements LoaderManager.LoaderCal
         }
 
         long timeInNano = System.nanoTime() - start;
-        Log.d(TAG, "onLoadFinished: " + (timeInNano) + "  " + albums.size());
+        Log.d(TAG, "onLoadFinished: " + (timeInNano) + " ,album size: " + albums.size());
         adapter.changeData(albums);
     }
 
